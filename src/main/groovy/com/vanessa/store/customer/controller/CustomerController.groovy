@@ -1,6 +1,7 @@
 package com.vanessa.store.customer.controller
 
 import com.vanessa.store.customer.model.Customer
+import com.vanessa.store.customer.model.CustomerCreate
 import com.vanessa.store.customer.service.CustomerService
 import com.vanessa.store.product.repository.ProductService
 import org.springframework.http.ResponseEntity
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+
+import javax.validation.Valid
 
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.OK
@@ -30,7 +33,7 @@ class CustomerController {
     }
 
     @PostMapping
-    ResponseEntity create(@RequestBody Customer customer) {
+    ResponseEntity create(@RequestBody @Valid CustomerCreate customer) {
         ResponseEntity.status(CREATED)
                 .body(customerService.create(customer))
     }

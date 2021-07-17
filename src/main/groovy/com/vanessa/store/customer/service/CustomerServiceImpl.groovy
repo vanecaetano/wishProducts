@@ -4,6 +4,7 @@ import com.vanessa.store.customer.exception.CustomerAlreadyExistentException
 import com.vanessa.store.customer.exception.CustomerBadInformationException
 import com.vanessa.store.customer.exception.CustomerNotFoundException
 import com.vanessa.store.customer.model.Customer
+import com.vanessa.store.customer.model.CustomerCreate
 import com.vanessa.store.customer.repository.CustomerEntity
 import com.vanessa.store.customer.repository.CustomerRepository
 
@@ -15,7 +16,7 @@ class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    Customer create(Customer customer) {
+    Customer create(CustomerCreate customer) {
         List<CustomerEntity> existentCustomer = customerRepository.findByEmail(customer.email)
         if (existentCustomer) throw new CustomerAlreadyExistentException("Cliente já possui cadastro com e-mail: $customer.email")
         CustomerEntity customerToCreate = new CustomerEntity(email: customer.email, name: customer.name)
@@ -78,9 +79,5 @@ class CustomerServiceImpl implements CustomerService {
                 email: customer.email,
                 name: customer.name
         )
-    }
-
-    boolean isValidEmailFormat(String email) {
-        email?: email.contains("@")
     }
 }

@@ -1,10 +1,11 @@
 package com.vanessa.store.customer.service
 
 import com.vanessa.store.customer.model.Customer
+import com.vanessa.store.customer.model.CustomerCreate
 
 interface CustomerService {
 
-    Customer create(Customer customer)
+    Customer create(CustomerCreate customer)
     Customer update(Customer customer)
     Customer findByEmail(String email)
     Customer findById(Long id)

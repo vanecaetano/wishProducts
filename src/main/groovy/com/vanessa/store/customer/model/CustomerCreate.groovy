@@ -4,11 +4,12 @@ import groovy.transform.Canonical
 
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
 
 @Canonical
-class Customer implements Serializable {
-    Long id
+class CustomerCreate implements Serializable {
+    @Email(message = "Informe um email válido")
+    @NotBlank(message = "Informe o email")
     String email
+    @NotBlank(message = "Informe o nome")
     String name
 }

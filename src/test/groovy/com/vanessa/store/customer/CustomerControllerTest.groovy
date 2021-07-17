@@ -4,66 +4,69 @@ import com.vanessa.store.customer.controller.CustomerController
 import com.vanessa.store.customer.exception.CustomerAlreadyExistentException
 import com.vanessa.store.customer.exception.CustomerNotFoundException
 import com.vanessa.store.customer.model.Customer
+import com.vanessa.store.customer.model.CustomerCreate
+import com.vanessa.store.customer.repository.CustomerEntity
+import com.vanessa.store.customer.repository.CustomerRepository
+import com.vanessa.store.customer.service.CustomerService
+import com.vanessa.store.customer.service.CustomerServiceImpl
+import com.vanessa.store.product.repository.ProductService
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa
-import org.springframework.boot.test.context.SpringBootTest
+
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.Mockito.mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.junit4.SpringRunner
 
-@SpringBootApplication
-@RunWith(SpringRunner.class)
-@AutoConfigureJdbc
-@AutoConfigureDataJpa
-@SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+import static org.mockito.Mockito.when
+
+@RunWith(MockitoJUnitRunner.class)
 class CustomerControllerTest {
-
-    @Autowired
-    CustomerController customerController
-    Customer joao = new Customer(name: "João", email: "joao@email.com")
-    Customer maria = new Customer(name: "Maria", email: "maria@email.com")
+    CustomerRepository customerRepository = mock(CustomerRepository)
+    ProductService productService = mock(ProductService)
+    CustomerService customerService = new CustomerServiceImpl(customerRepository)
+    CustomerController customerController = new CustomerController(customerService, productService)
+    CustomerEntity joao = new CustomerEntity(id: 1, email: "joao@email.com", name: "João")
 
     @Test
     void returnAllCustomers() {
-        customerController.create(joao)
-        customerController.create(maria)
+        when(customerRepository.findAll()).thenReturn(mockCustomers(2))
         ResponseEntity responseEntity = customerController.list()
         assert responseEntity.body?.size() == 2
     }
 
     @Test
     void createCustomerSuccessfully() {
-        ResponseEntity responseEntity = customerController.create(joao)
+        CustomerCreate maria = new CustomerCreate(email: "maria@email.com", name: "Maria")
+        when(customerRepository.save(any(CustomerEntity))).thenReturn(new CustomerEntity(id: 1, email: maria.email, name:maria.name))
+        ResponseEntity responseEntity = customerController.create(maria)
         assert responseEntity.statusCode == HttpStatus.CREATED
     }
 
     @Test
     void raiseConflictIfCreateUserWithEmailAlreadyExistent() {
-        customerController.create(joao)
+        CustomerCreate joaoModel = new CustomerCreate(email: "joao@email.com", name: "Joao")
+        when(customerRepository.findByEmail(joao.email)).thenReturn([joao])
+
         Assert.assertThrows(CustomerAlreadyExistentException,
                 ()-> {
-                    customerController.create(joao)
+                    customerController.create(joaoModel)
                 });
     }
 
     @Test
     void findExistentUserByIdSuccessfully() {
-        ResponseEntity customerCreated = customerController.create(joao)
+        when(customerRepository.findById(1)).thenReturn(Optional.of(joao))
         ResponseEntity responseEntity = customerController
-                .findById(customerCreated.body?.id)
+                .findById(1)
         assert responseEntity.statusCode == HttpStatus.OK
     }
 
     @Test
     void findExistentUserByEmailSuccessfully() {
-        customerController.create(joao)
+        when(customerRepository.findByEmail(joao.email)).thenReturn([joao])
         ResponseEntity<Customer> customerFound = customerController
                 .findByEmail(joao.email)
         assert customerFound.statusCode == HttpStatus.OK
@@ -71,6 +74,7 @@ class CustomerControllerTest {
 
     @Test
     void raiseNotFoundWhenInexistentEmailOnDatabase() {
+        when(customerRepository.findByEmail(joao.email)).thenReturn([])
         Assert.assertThrows(CustomerNotFoundException,
                 ()-> {
                     ResponseEntity<Customer> customer = customerController
@@ -80,7 +84,13 @@ class CustomerControllerTest {
 
     @Test
     void shouldDeleteCustomerSuccessfully() {
-        ResponseEntity responseEntity = customerController.create(joao)
-        customerController.remove(responseEntity.body?.id)
+        when(customerRepository.findById(1)).thenReturn(Optional.of(joao))
+        customerController.remove(1)
+    }
+
+    private List<CustomerEntity> mockCustomers(int howMany) {
+        (1..howMany).collect {
+            new CustomerEntity(id: it, email: "email$it@email.com", name: "Name $it")
+        }
     }
 }
