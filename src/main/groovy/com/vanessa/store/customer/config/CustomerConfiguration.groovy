@@ -1,6 +1,5 @@
 package com.vanessa.store.customer.config
 
-import com.vanessa.store.customer.controller.CustomerController
 import com.vanessa.store.customer.repository.CustomerRepository
 import com.vanessa.store.customer.service.CustomerService
 import com.vanessa.store.customer.service.CustomerServiceImpl

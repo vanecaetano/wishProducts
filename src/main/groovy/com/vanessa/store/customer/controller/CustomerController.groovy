@@ -2,6 +2,7 @@ package com.vanessa.store.customer.controller
 
 import com.vanessa.store.customer.model.Customer
 import com.vanessa.store.customer.service.CustomerService
+import com.vanessa.store.product.repository.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,9 +22,11 @@ import static org.springframework.http.HttpStatus.OK
 class CustomerController {
 
     CustomerService customerService
+    ProductService productService
 
-    CustomerController(CustomerService customerService) {
+    CustomerController(CustomerService customerService, ProductService productService) {
         this.customerService = customerService
+        this.productService = productService
     }
 
     @PostMapping
@@ -42,6 +45,12 @@ class CustomerController {
     ResponseEntity findById(@PathVariable Long id) {
         ResponseEntity.status(OK)
                 .body(customerService.findById(id))
+    }
+
+    @GetMapping("/product/{id}")
+    ResponseEntity findProduct(@PathVariable String id) {
+        ResponseEntity.status(OK)
+                .body(productService.findById(id))
     }
 
     @GetMapping
