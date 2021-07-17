@@ -1,7 +1,7 @@
-package com.vanessa.store.customer
+package com.vanessa.store
 
-import com.vanessa.store.customer.config.CustomerConfiguration
-import com.vanessa.store.product.config.ProductConfiguration
+import com.vanessa.store.config.CustomerConfiguration
+import com.vanessa.store.config.ProductConfiguration
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 @ComponentScan
 @EntityScan
 @ControllerAdvice
-@Import([CustomerConfiguration.class, ProductConfiguration.class])
+@Import([ProductConfiguration.class, CustomerConfiguration.class])
 @EnableJpaRepositories
 class Main {
 

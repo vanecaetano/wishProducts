@@ -1,4 +1,4 @@
-package com.vanessa.store.customer.config
+package com.vanessa.store.config
 
 import com.vanessa.store.customer.repository.CustomerRepository
 import com.vanessa.store.customer.service.CustomerService
