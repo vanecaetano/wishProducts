@@ -7,6 +7,7 @@ interface CustomerService {
 
     Customer create(CustomerCreate customer)
     Customer update(Customer customer)
+    Customer updateWishList(Customer customer)
     Customer findByEmail(String email)
     Customer findById(Long id)
     List<Customer> findAll()

@@ -16,7 +16,7 @@ import org.springframework.web.context.request.WebRequest
 class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(CustomerAlreadyExistentException)
-    ResponseEntity<ErrorMessage> conflictExceptionHandler(Exception ex, WebRequest request) {
+    ResponseEntity<ErrorMessage> conflictExceptionHandler(Exception ex) {
         return new ResponseEntity<>(new ErrorMessage(ex.getMessage()), HttpStatus.CONFLICT)
     }
 
@@ -24,7 +24,7 @@ class GlobalControllerExceptionHandler {
             CustomerNotFoundException,
             ProductNotFoundException
     ])
-    ResponseEntity<ErrorMessage> notFoundExceptionHandler(RuntimeException ex, WebRequest request) {
+    ResponseEntity<ErrorMessage> notFoundExceptionHandler(RuntimeException ex) {
         return new ResponseEntity<>(new ErrorMessage(ex.getMessage()), HttpStatus.NOT_FOUND)
     }
 
@@ -32,7 +32,7 @@ class GlobalControllerExceptionHandler {
             CustomerBadInformationException,
             WishlistBadInformationException
     ])
-    ResponseEntity<ErrorMessage> badRequestExceptionHandler(CustomerBadInformationException e) {
+    ResponseEntity<ErrorMessage> badRequestExceptionHandler(RuntimeException e) {
         ErrorMessage errorMessage = new ErrorMessage(errorMessage: e.message)
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST)
     }

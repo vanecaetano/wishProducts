@@ -7,42 +7,42 @@ import com.vanessa.store.product.repository.ProductEntity
 
 class ModelEntityConverter {
 
-    static CustomerEntity convertToEntity(Customer customer) {
+    static CustomerEntity convertCustomerToEntity(Customer customer) {
         new CustomerEntity(
                 id: customer.id,
                 email: customer.email,
                 name: customer.name,
-                wishlist: customer.wishlist.collect {convertToEntity(it)}
+                wishlist: customer.wishlist ? customer.wishlist.collect {convertProductToEntity(it)} : null
         )
     }
 
-    static Customer convertToModel(CustomerEntity customer) {
+    static Customer convertCustomerToModel(CustomerEntity customer) {
         new Customer (
                 id: customer.id,
                 email: customer.email,
                 name: customer.name,
-                wishlist: customer.wishlist.collect {convertToModel(it)}
+                wishlist: customer.wishlist ? customer.wishlist.collect {convertProductToModel(it)} : null
 
         )
     }
 
-    static ProductEntity convertToEntity(Product product) {
+    static ProductEntity convertProductToEntity(Product product) {
         new ProductEntity(
-                id: product.id,
-                title: product.title,
-                image: product.image,
-                price: product.price,
-                reviewScore: product.reviewScore
+                id: product?.id,
+                title: product?.title,
+                image: product?.image,
+                price: product?.price,
+                reviewScore: product?.reviewScore
         )
     }
 
-    static Product convertToModel(ProductEntity product) {
+    static Product convertProductToModel(ProductEntity product) {
         new Product(
                 id: product.id,
-                title: product.title,
-                image: product.image,
-                price: product.price,
-                reviewScore: product.reviewScore
+                title: product?.title,
+                image: product?.image,
+                price: product?.price,
+                reviewScore: product?.reviewScore
         )
     }
 }

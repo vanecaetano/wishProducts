@@ -9,7 +9,6 @@ import com.vanessa.store.customer.repository.CustomerEntity
 import com.vanessa.store.customer.repository.CustomerRepository
 import com.vanessa.store.customer.service.CustomerService
 import com.vanessa.store.customer.service.CustomerServiceImpl
-import com.vanessa.store.product.repository.ProductRepository
 import com.vanessa.store.product.service.ProductService
 import com.vanessa.store.wishlist.service.WishlistServiceImpl
 import org.junit.Assert
@@ -17,17 +16,16 @@ import org.junit.jupiter.api.Test
 
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
+import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
 class CustomerControllerTest {
     CustomerRepository customerRepository = mock(CustomerRepository)
     ProductService productService = mock(ProductService)
     CustomerService customerService = new CustomerServiceImpl(customerRepository)
-    ProductRepository productRepository = mock(ProductRepository)
     WishlistServiceImpl wishlistService = new WishlistServiceImpl(customerService, productService)
     CustomerController customerController = new CustomerController(customerService, productService, wishlistService)
     CustomerEntity joao = new CustomerEntity(id: 1, email: "joao@email.com", name: "João")
@@ -82,12 +80,6 @@ class CustomerControllerTest {
                     ResponseEntity<Customer> customer = customerController
                             .findByEmail("inexistent@email.com")
                 });
-    }
-
-    @Test
-    void shouldDeleteCustomerSuccessfully() {
-        when(customerRepository.findById(1)).thenReturn(Optional.of(joao))
-        customerController.remove(1)
     }
 
     private List<CustomerEntity> mockCustomers(int howMany) {
