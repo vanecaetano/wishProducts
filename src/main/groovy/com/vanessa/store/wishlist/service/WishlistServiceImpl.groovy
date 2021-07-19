@@ -42,6 +42,33 @@ class WishlistServiceImpl implements WishlistService {
         }
     }
 
+    @Override
+    Wishlist getWishList(Long customerId) {
+        try {
+            Customer customer = customerService.findById(customerId)
+            buildWishlistOutput(customer)
+        } catch(CustomerNotFoundException c) {
+            throw new WishlistBadInformationException("Cliente não encontrado")
+        }
+    }
+
+    @Override
+    void removeProductFromWishlist(Long customerId, String productId) {
+        try {
+            CustomerEntity customer = convertToEntity(customerService.findById(customerId))
+            ProductEntity product = new ProductEntity(id: productId)
+
+            customer.wishlist.remove(product)
+            customerService
+                    .update(convertToModel(customer))
+                    .collect {buildWishlistOutput(it)}
+                    .first()
+
+        } catch(CustomerNotFoundException c) {
+            throw new WishlistBadInformationException("Cliente não encontrado")
+        }
+    }
+
     private static Wishlist buildWishlistOutput(Customer it) {
         new Wishlist(customerId: it.id,
                 wishlist: it.wishlist

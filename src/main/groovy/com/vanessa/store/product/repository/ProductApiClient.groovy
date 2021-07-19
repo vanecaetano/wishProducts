@@ -57,7 +57,6 @@ class Metadata {
 
 @Table(name="products")
 @Entity
-@Canonical
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ProductEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -68,4 +67,80 @@ class ProductEntity implements Serializable {
     String title
     String brand
     String image
+
+    String getId() {
+        return id
+    }
+
+    void setId(String id) {
+        this.id = id
+    }
+
+    BigDecimal getPrice() {
+        return price
+    }
+
+    void setPrice(BigDecimal price) {
+        this.price = price
+    }
+
+    String getReviewScore() {
+        return reviewScore
+    }
+
+    void setReviewScore(String reviewScore) {
+        this.reviewScore = reviewScore
+    }
+
+    String getTitle() {
+        return title
+    }
+
+    void setTitle(String title) {
+        this.title = title
+    }
+
+    String getBrand() {
+        return brand
+    }
+
+    void setBrand(String brand) {
+        this.brand = brand
+    }
+
+    String getImage() {
+        return image
+    }
+
+    void setImage(String image) {
+        this.image = image
+    }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        ProductEntity that = (ProductEntity) o
+
+        if (id != that.id) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return (id != null ? id.hashCode() : 0)
+    }
+
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "id='" + id + '\'' +
+                ", price=" + price +
+                ", reviewScore='" + reviewScore + '\'' +
+                ", title='" + title + '\'' +
+                ", brand='" + brand + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }

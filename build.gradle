@@ -20,6 +20,7 @@ dependencies {
 	implementation 'org.codehaus.groovy:groovy'
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
 	implementation 'junit:junit:4.13.1'
+	testRuntimeOnly("junit:junit:4.13.1")
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.h2database:h2'
 

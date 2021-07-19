@@ -14,7 +14,6 @@ import com.vanessa.store.product.service.ProductService
 import com.vanessa.store.wishlist.service.WishlistServiceImpl
 import org.junit.Assert
 import org.junit.jupiter.api.Test
-import org.junit.runner.RunWith
 
 import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.mock
@@ -24,7 +23,6 @@ import org.springframework.http.ResponseEntity
 
 import static org.mockito.Mockito.when
 
-@RunWith(MockitoJUnitRunner.class)
 class CustomerControllerTest {
     CustomerRepository customerRepository = mock(CustomerRepository)
     ProductService productService = mock(ProductService)

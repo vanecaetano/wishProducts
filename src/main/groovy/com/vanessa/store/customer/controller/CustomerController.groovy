@@ -78,17 +78,17 @@ class CustomerController {
                 )
     }
 
-//    @DeleteMapping("/{customerId}/wishList/{productId}")
-//    ResponseEntity removeProduct(@PathVariable Long customerId, String productId) {
-//        ResponseEntity.status(OK)
-//                .body(customerService.removeProductFromWishlist(customerId, productId)
-//                )
-//    }
-//
-//    @GetMapping("/{customerId}/wishList")
-//    ResponseEntity getWishlist(@PathVariable Long customerId) {
-//        ResponseEntity.status(OK)
-//                .body(customerService.getWishList(customerId)
-//                )
-//    }
+    @DeleteMapping("/{customerId}/wishlist/{productId}")
+    ResponseEntity removeProduct(@PathVariable Long customerId, @PathVariable String productId) {
+        ResponseEntity.status(OK)
+                .body(wishlistService.removeProductFromWishlist(customerId, productId)
+                )
+    }
+
+    @GetMapping("/{customerId}/wishlist")
+    ResponseEntity getWishlist(@PathVariable Long customerId) {
+        ResponseEntity.status(OK)
+                .body(wishlistService.getWishList(customerId)
+                )
+    }
 }
