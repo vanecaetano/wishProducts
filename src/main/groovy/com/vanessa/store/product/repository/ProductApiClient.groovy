@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.vanessa.store.product.exception.ProductNotFoundException
 import com.vanessa.store.product.exception.ProductServiceApiException
+import com.vanessa.store.product.model.Product
+import com.vanessa.store.product.service.ProductService
 import groovy.transform.Canonical
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.HttpServerErrorException
@@ -14,7 +16,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Canonical
-class ProductApiClient {
+class ProductApiClient implements ProductService {
 
     RestTemplate restTemplate
     String productApiUrl
@@ -24,10 +26,10 @@ class ProductApiClient {
         this.productApiUrl = productApiUrl
     }
 
-    Optional<ProductEntity> findProductById(String id) {
+    @Override
+    Product findProductById(String id) {
         try {
-            Optional.of(
-                    restTemplate.getForObject("$productApiUrl/${id}/", ProductEntity.class))
+            restTemplate.getForObject("$productApiUrl/${id}/", Product.class)
         } catch (HttpServerErrorException ex) {
             throw new ProductServiceApiException("Servidor indisponível")
         } catch (HttpClientErrorException ex) {
@@ -57,7 +59,8 @@ class Metadata {
 @Entity
 @Canonical
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ProductEntity {
+class ProductEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     String id
     BigDecimal price

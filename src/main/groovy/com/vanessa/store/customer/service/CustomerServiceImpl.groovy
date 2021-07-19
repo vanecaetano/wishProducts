@@ -1,5 +1,7 @@
 package com.vanessa.store.customer.service
 
+import static com.vanessa.store.converter.ModelEntityConverter.convertToEntity
+import static com.vanessa.store.converter.ModelEntityConverter.convertToModel
 import com.vanessa.store.customer.exception.CustomerAlreadyExistentException
 import com.vanessa.store.customer.exception.CustomerBadInformationException
 import com.vanessa.store.customer.exception.CustomerNotFoundException
@@ -20,7 +22,7 @@ class CustomerServiceImpl implements CustomerService {
         List<CustomerEntity> existentCustomer = customerRepository.findByEmail(customer.email)
         if (existentCustomer) throw new CustomerAlreadyExistentException("Cliente já possui cadastro com e-mail: $customer.email")
         CustomerEntity customerToCreate = new CustomerEntity(email: customer.email, name: customer.name)
-        convert(customerRepository.save(customerToCreate))
+        convertToModel(customerRepository.save(customerToCreate))
     }
 
     @Override
@@ -28,8 +30,8 @@ class CustomerServiceImpl implements CustomerService {
         if (!customer.id) throw new CustomerBadInformationException("Id do cliente é obrigatório: $customer")
         Optional<CustomerEntity> existentCustomer = customerRepository.findById(customer.id)
         existentCustomer.map {
-            CustomerEntity customerToUpdate = convert(customer)
-            convert(customerRepository.save(customerToUpdate))
+            CustomerEntity customerToUpdate = convertToEntity(customer)
+            convertToModel(customerRepository.save(customerToUpdate))
         }.orElseThrow {
             throw new CustomerNotFoundException("Não foi possível encontrar o cliente: $customer.id")
         }
@@ -39,13 +41,13 @@ class CustomerServiceImpl implements CustomerService {
     Customer findByEmail(String email) {
         List<CustomerEntity> foundCustomer = customerRepository.findByEmail(email)
         if (!foundCustomer) throw new CustomerNotFoundException("Não foi possível encontrar o cliente: $email")
-        convert(foundCustomer.first())
+        convertToModel(foundCustomer.first())
     }
 
     @Override
     Customer findById(Long id) {
         customerRepository.findById(id).map{
-            convert(it)
+            convertToModel(it)
         }.orElseThrow {
             new CustomerNotFoundException("Cliente não encontrado.")
         }
@@ -54,30 +56,13 @@ class CustomerServiceImpl implements CustomerService {
     @Override
     List<Customer> findAll() {
         return customerRepository.findAll()
-                .collect{
-            convert(it)
-        }
+                .collect{ convertToModel(it)}
     }
 
     @Override
     void remove(Long id) {
-        CustomerEntity entity = convert(findById(id))
+        CustomerEntity entity = convertToEntity(findById(id))
         customerRepository.delete(entity)
     }
 
-    static CustomerEntity convert(Customer customer) {
-        new CustomerEntity(
-                id: customer.id,
-                email: customer.email,
-                name: customer.name
-        )
-    }
-
-    static Customer convert(CustomerEntity customer) {
-        new Customer (
-                id: customer.id,
-                email: customer.email,
-                name: customer.name
-        )
-    }
 }

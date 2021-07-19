@@ -9,7 +9,9 @@ import com.vanessa.store.customer.repository.CustomerEntity
 import com.vanessa.store.customer.repository.CustomerRepository
 import com.vanessa.store.customer.service.CustomerService
 import com.vanessa.store.customer.service.CustomerServiceImpl
-import com.vanessa.store.product.repository.ProductService
+import com.vanessa.store.product.repository.ProductRepository
+import com.vanessa.store.product.service.ProductService
+import com.vanessa.store.wishlist.service.WishlistServiceImpl
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -27,7 +29,9 @@ class CustomerControllerTest {
     CustomerRepository customerRepository = mock(CustomerRepository)
     ProductService productService = mock(ProductService)
     CustomerService customerService = new CustomerServiceImpl(customerRepository)
-    CustomerController customerController = new CustomerController(customerService, productService)
+    ProductRepository productRepository = mock(ProductRepository)
+    WishlistServiceImpl wishlistService = new WishlistServiceImpl(customerService, productService)
+    CustomerController customerController = new CustomerController(customerService, productService, wishlistService)
     CustomerEntity joao = new CustomerEntity(id: 1, email: "joao@email.com", name: "João")
 
     @Test

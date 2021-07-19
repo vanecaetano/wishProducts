@@ -3,7 +3,8 @@ package com.vanessa.store.customer.controller
 import com.vanessa.store.customer.model.Customer
 import com.vanessa.store.customer.model.CustomerCreate
 import com.vanessa.store.customer.service.CustomerService
-import com.vanessa.store.product.repository.ProductService
+import com.vanessa.store.product.service.ProductService
+import com.vanessa.store.wishlist.service.WishlistService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -26,10 +27,12 @@ class CustomerController {
 
     CustomerService customerService
     ProductService productService
+    WishlistService wishlistService
 
-    CustomerController(CustomerService customerService, ProductService productService) {
+    CustomerController(CustomerService customerService, ProductService productService, WishlistService wishlistService) {
         this.customerService = customerService
         this.productService = productService
+        this.wishlistService = wishlistService
     }
 
     @PostMapping
@@ -50,12 +53,6 @@ class CustomerController {
                 .body(customerService.findById(id))
     }
 
-    @GetMapping("/product/{id}")
-    ResponseEntity findProduct(@PathVariable String id) {
-        ResponseEntity.status(OK)
-                .body(productService.findById(id))
-    }
-
     @GetMapping
     ResponseEntity list() {
         ResponseEntity.status(OK)
@@ -73,4 +70,25 @@ class CustomerController {
         ResponseEntity.status(OK)
                 .body(customerService.remove(id))
     }
+
+    @PostMapping("/{customerId}/wishlist/{productId}")
+    ResponseEntity addProductToWishlist(@PathVariable Long customerId, @PathVariable String productId) {
+        ResponseEntity.status(OK)
+                .body(wishlistService.addProductToWishlist(customerId, productId)
+                )
+    }
+
+//    @DeleteMapping("/{customerId}/wishList/{productId}")
+//    ResponseEntity removeProduct(@PathVariable Long customerId, String productId) {
+//        ResponseEntity.status(OK)
+//                .body(customerService.removeProductFromWishlist(customerId, productId)
+//                )
+//    }
+//
+//    @GetMapping("/{customerId}/wishList")
+//    ResponseEntity getWishlist(@PathVariable Long customerId) {
+//        ResponseEntity.status(OK)
+//                .body(customerService.getWishList(customerId)
+//                )
+//    }
 }

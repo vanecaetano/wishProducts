@@ -1,7 +1,7 @@
 package com.vanessa.store.config
 
 import com.vanessa.store.product.repository.ProductRepository
-import com.vanessa.store.product.repository.ProductService
+import com.vanessa.store.product.service.ProductService
 import com.vanessa.store.product.repository.ProductApiClient
 import com.vanessa.store.product.service.ProductServiceImp
 import org.springframework.beans.factory.annotation.Value

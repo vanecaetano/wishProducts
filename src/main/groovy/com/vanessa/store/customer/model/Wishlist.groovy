@@ -6,9 +6,7 @@ import groovy.transform.Canonical
 
 @Canonical
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class Customer implements Serializable {
-    Long id
-    String email
-    String name
+class Wishlist implements Serializable {
+    Long customerId
     Set<Product> wishlist
 }
